@@ -3,12 +3,12 @@ import { DASHBOARD_STATE_STORE } from 'framework';
 
 /**
  * Plugin component. The ONLY framework symbol it imports is the injection
- * token (and, transitively, the `DashboardStateStore` interface used to type
+ * token (and, transitively, the `IDashboardStateStore` interface used to type
  * the inject result). The component has no idea whether it is talking to the
  * real store or a mock.
  */
 @Component({
-  selector: 'lib-dashboard-widget',
+  selector: 'lib-dashboard',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
@@ -22,7 +22,7 @@ import { DASHBOARD_STATE_STORE } from 'framework';
     button { cursor: pointer; }
   `,
   template: `
-    <section data-testid="dashboard-widget">
+    <section data-testid="dashboard">
       <header>
         <h2>Dashboard</h2>
         <button data-testid="load-btn" type="button" (click)="store.loadWidgets()">
@@ -59,6 +59,6 @@ import { DASHBOARD_STATE_STORE } from 'framework';
     </section>
   `,
 })
-export class DashboardWidget {
+export class Dashboard {
   protected readonly store = inject(DASHBOARD_STATE_STORE);
 }

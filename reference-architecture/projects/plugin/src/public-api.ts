@@ -6,4 +6,4 @@
  * so consumers don't need to wire anything beyond the framework providers.
  */
 
-export * from './lib/dashboard-widget/dashboard-widget';
+export * from './lib/dashboard/dashboard';

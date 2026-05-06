@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DashboardWidget } from 'plugin';
+import { Dashboard } from 'plugin';
 
 @Component({
   selector: 'app-root',
-  imports: [DashboardWidget],
+  imports: [Dashboard],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
