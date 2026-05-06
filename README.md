@@ -91,21 +91,45 @@ All commands run from `reference-architecture/`:
 # install
 npm install
 
-# run the production app (real framework)
-ng serve app
+# build the libs once so the path aliases resolve
+npm run build:libs
 
-# run the test host (mock framework + bridge)
-ng serve plugin-host
+# run the production app (real framework + Material shell) on :4200
+npm run start:app
 
-# Playwright e2e against the test host
-ng e2e plugin-host
+# run the test host (mock framework + bridge) on :4201
+npm run start:plugin-host
+
+# Playwright e2e against the test host (auto-starts plugin-host on :4201)
+npm run test:e2e
 ```
+
+## Documentation
+
+The deep-dive docs live in `reference-architecture/docs/`:
+
+- [`architecture.md`](reference-architecture/docs/architecture.md) —
+  the four projects, dependency rules, and how the singleton store flows
+  through both hosts.
+- [`injection-token-pattern.md`](reference-architecture/docs/injection-token-pattern.md)
+  — interface + token + implementation split, **singleton semantics of
+  `providedIn: 'root'` + `useExisting` aliasing**, naming conventions,
+  the provider-form table, and a checklist for adding new services.
+- [`bridge-pattern.md`](reference-architecture/docs/bridge-pattern.md) —
+  the Playwright bridge in both directions (call recording AND
+  controller registry), `page.evaluate` mechanics and serialization
+  rules, the Page Object Model as both driver and verifier, and the
+  `NgZone.run` wrap that keeps OnPush views ticking when tests push
+  state from outside Angular's zone.
 
 ## Reading order for new contributors
 
 1. `docs/idea.md` — the original premise.
-2. `projects/framework/src/lib/stores/dashboard-state.store.contract.ts` — the contract.
-3. `projects/plugin/src/lib/dashboard/dashboard.ts` — a consumer that knows only the token.
-4. `projects/plugin-host/src/app/mocks/dashboard-state.store.mock.ts` — the swap-in implementation.
-5. `projects/plugin-host/src/app/bridge/playwright-bridge.ts` — the test observation point.
-6. `projects/plugin-host/e2e/tests/dashboard-widget.spec.ts` — what the boundary test looks like.
+2. [`reference-architecture/docs/architecture.md`](reference-architecture/docs/architecture.md) —
+   how the pieces fit together.
+3. `projects/framework/src/lib/stores/dashboard-state.store.contract.ts` — the contract.
+4. `projects/plugin/src/lib/dashboard/dashboard.ts` — a consumer that knows only the token.
+5. `projects/plugin-host/src/app/mocks/dashboard-state.store.mock.ts` — the swap-in implementation.
+6. `projects/plugin-host/src/app/bridge/playwright-bridge.ts` — the test observation point.
+7. `projects/plugin-host/e2e/pages/dashboard.page.ts` — the Page Object that owns the bridge.
+8. `projects/plugin-host/e2e/tests/dashboard.spec.ts` — what the boundary tests look like.
