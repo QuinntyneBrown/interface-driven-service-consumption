@@ -3,6 +3,7 @@ import { Dashboard } from 'plugin';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [Dashboard],
   templateUrl: './app.html',
   styleUrl: './app.scss',
