@@ -1,59 +1,90 @@
-# ReferenceArchitecture
+# Interface-Driven Service Consumption — Angular reference architecture
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+A small Angular workspace that demonstrates **interface-driven service
+consumption**: plugin code depends only on interfaces (handed out as
+`InjectionToken`s), never on concrete implementations. Implementations are
+chosen at the application boundary — a real one in production, a mock one
+in the test host.
 
-## Development server
+## Project layout
 
-To start a local development server, run:
-
-```bash
-ng serve
+```
+projects/
+├── framework/      Angular library: service contracts (interface + token) + real impls
+├── plugin/         Angular library: UI components that inject framework TOKENS only
+├── app/            Angular app: wires plugin + REAL framework store
+└── plugin-host/    Angular app: wires plugin + MOCK framework store + window bridge
+    └── e2e/        Playwright tests using Page Object Model
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Dependency rules
 
-## Code scaffolding
+| From          | Depends on                                  |
+| ------------- | ------------------------------------------- |
+| `framework`   | (no project deps)                           |
+| `plugin`      | `framework` — only contract files           |
+| `app`         | `framework`, `plugin`                       |
+| `plugin-host` | `framework` (contracts), `plugin`, Playwright |
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+`plugin` never imports concrete framework classes — only the contract files
+that export interfaces and `InjectionToken`s.
 
-```bash
-ng generate component component-name
+## Quickstart
+
+```sh
+npm install
+npm run test:e2e:install     # one-time: install Playwright Chromium
+npm run build:libs           # build framework + plugin into dist/ once
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Both apps consume `framework` and `plugin` from `dist/`, so the libraries
+must be built (or watching) before the apps will serve. For day-to-day
+development, run watchers in two extra terminals:
 
-```bash
-ng generate --help
+```sh
+# terminal 1
+npm run watch:framework
+
+# terminal 2
+npm run watch:plugin
+
+# terminal 3 — real wiring at http://localhost:4200
+npm run start:app
+
+# (or) mock wiring at http://localhost:4201
+npm run start:plugin-host
 ```
 
-## Building
+Run the Playwright suite (it brings up `plugin-host` for you):
 
-To build the project run:
-
-```bash
-ng build
+```sh
+npm run build:libs
+npm run test:e2e
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Naming convention
 
-## Running unit tests
+- **Service interfaces** (have methods): `I` prefix — `IDashboardStateStore`,
+  `IPlaywrightBridge`.
+- **Service implementations**: take the unprefixed name —
+  `class DashboardStateStore implements IDashboardStateStore`. No `Impl`
+  suffix.
+- **Data DTOs / models** (no methods): no prefix — `DashboardWidget`,
+  `BridgeCall`.
+- **Injection tokens**: `SCREAMING_SNAKE_CASE` matching the interface —
+  `DASHBOARD_STATE_STORE` for `IDashboardStateStore`.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Documentation
 
-```bash
-ng test
-```
+- [docs/architecture.md](docs/architecture.md) — overall picture and rules
+- [docs/injection-token-pattern.md](docs/injection-token-pattern.md) — how
+  the contract / token / impl split works, with a step-by-step checklist
+- [docs/bridge-pattern.md](docs/bridge-pattern.md) — how the window bridge
+  lets Playwright assert on mock interface calls
 
-## Running end-to-end tests
+## Where to start reading the code
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Open
+`projects/framework/src/lib/stores/dashboard-state.store.contract.ts`
+and follow the `DASHBOARD_STATE_STORE` token through `plugin`, `app`, and
+`plugin-host`.

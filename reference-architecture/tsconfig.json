@@ -5,8 +5,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "framework": ["./projects/framework/src/public-api.ts"],
-      "plugin": ["./projects/plugin/src/public-api.ts"]
+      "framework": ["./dist/framework"],
+      "plugin": ["./dist/plugin"]
     },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

@@ -62,12 +62,23 @@ an `Impl` suffix.
 ## The Playwright bridge
 
 `projects/plugin-host/src/app/bridge/playwright-bridge.ts` installs a tiny
-object on `window.__pluginHostBridge` that records `{ method, args, ts }` for
-every command the mock receives. Tests in
-`projects/plugin-host/e2e/tests/` use a page object
-(`pages/dashboard-widget.page.ts`) to drive the UI and then assert on the
-recorded calls — verifying that *the plugin invokes the framework contract
-correctly*, which is the boundary this project exists to test.
+object on `window.__pluginHostBridge` that exposes **both directions** of the
+plugin ↔ framework boundary to tests:
+
+- **Plugin → framework (call recording).** The mock pipes every interface
+  invocation through `recordCall`, so tests can assert the plugin called the
+  contract correctly with `bridge.callsFor('selectWidget')` etc.
+- **Framework → plugin (controller registry).** Mocks register a typed
+  controller (e.g. `setWidgets`, `setLoading`, `setSelectedWidgetId`) under a
+  string name. Tests fetch it via `bridge.controller<T>('dashboard')` and use
+  it to push state into the mock's signals — the plugin's signal-driven UI
+  then re-renders exactly as it would against the real framework.
+
+The bridge itself stays domain-agnostic; specific controller contracts live
+next to the mocks that implement them. Tests in
+`projects/plugin-host/e2e/tests/` go through a page object
+(`pages/dashboard.page.ts`) for both DOM access and bridge access, so
+assertions never touch raw selectors or `page.evaluate` directly.
 
 The bridge ships **only** in `plugin-host`; it never reaches the production
 `app` bundle.
