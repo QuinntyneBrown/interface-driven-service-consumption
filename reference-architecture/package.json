@@ -1,0 +1,41 @@
+{
+  "name": "reference-architecture",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve app",
+    "start:app": "ng serve app",
+    "start:plugin-host": "ng serve plugin-host",
+    "build": "ng build app",
+    "build:framework": "ng build framework",
+    "build:plugin": "ng build plugin",
+    "build:plugin-host": "ng build plugin-host",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:e2e": "playwright test --config projects/plugin-host/e2e/playwright.config.ts",
+    "test:e2e:install": "playwright install --with-deps chromium"
+  },
+  "private": true,
+  "packageManager": "npm@10.9.4",
+  "dependencies": {
+    "@angular/common": "^21.2.0",
+    "@angular/compiler": "^21.2.0",
+    "@angular/core": "^21.2.0",
+    "@angular/forms": "^21.2.0",
+    "@angular/platform-browser": "^21.2.0",
+    "@angular/router": "^21.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.10",
+    "@angular/cli": "^21.2.7",
+    "@angular/compiler-cli": "^21.2.0",
+    "@playwright/test": "^1.48.0",
+    "jsdom": "^28.0.0",
+    "ng-packagr": "^21.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2",
+    "vitest": "^4.0.8"
+  }
+}

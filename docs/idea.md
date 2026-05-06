@@ -1,0 +1,13 @@
+- reference architecture ofr interface driven service consumption in Angular
+- Angular plugin library depends on injection tokens of interface from an Angular library that provides core functionality or state stores using Signals
+- Angular application plugin specific host used for e2e testings the plugin using Playwright page object model
+- Angular application plugin specific host defines interface mocks of the injection state store and various functionality
+- Angular application plugin specific host uses a windows bridge to exposes interface mocks to allow playwright to verify the mocks are being called with the correct parameters. The actual implementation in the framework library IS NOT excerised in the playwright tests
+- comprehensive documentation of bride pattern / implementation and interface injection token pattern for junior developers
+- app uses plugin library (decoupled)
+- app depends on framework
+- plugin depends on framework
+- plugin-host depends on plugin and framework
+- plugin-host depdends on playwight and has tests for plugin behaviour using page object model pattern. Tests from UI to framework interface boundary
+- plugin-host implements bridge to expose mock interface to verify framework interface being called correctly
+- framework has state stores needed by plugin. For example dashboard-state.store.ts and the interface and injection token would be in dashboard-state.store.contract.ts

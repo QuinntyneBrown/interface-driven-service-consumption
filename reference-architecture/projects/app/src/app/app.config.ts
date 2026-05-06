@@ -1,0 +1,17 @@
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { DASHBOARD_STATE_STORE, DashboardStateStore } from 'framework';
+import { routes } from './app.routes';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideBrowserGlobalErrorListeners(),
+    provideRouter(routes),
+
+    // The composition-root binding: in production the token is satisfied by
+    // the REAL framework store. The plugin never sees this line — it only
+    // ever asks for `DASHBOARD_STATE_STORE`.
+    { provide: DASHBOARD_STATE_STORE, useExisting: DashboardStateStore },
+  ],
+};
