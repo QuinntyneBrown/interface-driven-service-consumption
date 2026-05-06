@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve app",
     "start:app": "ng serve app",
-    "start:plugin-host": "ng serve plugin-host",
+    "start:plugin-host": "ng serve plugin-host --port 4201",
     "build": "npm run build:framework && npm run build:plugin && ng build app",
     "build:framework": "ng build framework",
     "build:plugin": "ng build plugin",
