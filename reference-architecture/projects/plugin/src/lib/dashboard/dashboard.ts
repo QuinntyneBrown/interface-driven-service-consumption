@@ -4,6 +4,12 @@ import {
   computed,
   inject,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DASHBOARD_STATE_STORE } from 'framework';
 
 /**
@@ -11,6 +17,10 @@ import { DASHBOARD_STATE_STORE } from 'framework';
  * token (and, transitively, the `IDashboardStateStore` interface used to type
  * the inject result). The component has no idea whether it is talking to the
  * real store or a mock.
+ *
+ * Visuals are built entirely from Angular Material primitives: a card frame,
+ * a list of widgets, Material buttons + icon buttons, a progress bar for the
+ * loading state, and a divider between sections.
  *
  * The component is fully driven by Signals: the widget list, loading
  * indicator, and details panel all derive from store signals. When the store
@@ -20,65 +30,17 @@ import { DASHBOARD_STATE_STORE } from 'framework';
 @Component({
   selector: 'lib-dashboard',
   standalone: true,
+  imports: [
+    MatButtonModule,
+    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
+    MatListModule,
+    MatProgressBarModule,
+  ],
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: `
-    :host { display: block; font-family: system-ui, sans-serif; }
-    section { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    ul { list-style: none; padding: 0; margin: 0; }
-    li { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-bottom: 1px solid #eee; }
-    li.selected { background: #eef6ff; }
-    li:last-child { border-bottom: none; }
-    aside { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed #ccc; }
-    aside h3 { margin: 0 0 0.25rem 0; font-size: 0.95rem; }
-    button { cursor: pointer; }
-  `,
-  template: `
-    <section data-testid="dashboard">
-      <header>
-        <h2>Dashboard</h2>
-        <button data-testid="load-btn" type="button" (click)="store.loadWidgets()">
-          Load
-        </button>
-      </header>
-
-      @if (store.loading()) {
-        <p data-testid="loading">Loading…</p>
-      }
-
-      <ul>
-        @for (w of store.widgets(); track w.id) {
-          <li
-            [attr.data-testid]="'widget-' + w.id"
-            [class.selected]="w.id === store.selectedWidgetId()"
-          >
-            <span style="flex: 1;">{{ w.title }}: {{ w.value }}</span>
-            <button
-              [attr.data-testid]="'select-' + w.id"
-              type="button"
-              (click)="store.selectWidget(w.id)"
-            >Select</button>
-            <button
-              [attr.data-testid]="'refresh-' + w.id"
-              type="button"
-              (click)="store.refreshWidget(w.id)"
-            >Refresh</button>
-          </li>
-        } @empty {
-          <li data-testid="empty">No widgets loaded yet.</li>
-        }
-      </ul>
-
-      <aside>
-        <h3>Selected</h3>
-        @if (selectedWidget(); as w) {
-          <p data-testid="details">{{ w.title }} — {{ w.value }}</p>
-        } @else {
-          <p data-testid="details-empty">No widget selected.</p>
-        }
-      </aside>
-    </section>
-  `,
 })
 export class Dashboard {
   protected readonly store = inject(DASHBOARD_STATE_STORE);

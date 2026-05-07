@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+}
+
+.row-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.selected-row {
+  background: rgba(63, 81, 181, 0.08);
+}
+
+.section-heading {
+  margin: 0.75rem 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.details {
+  margin: 0;
+}
+
+.empty,
+.details-empty {
+  color: rgba(0, 0, 0, 0.54);
+  font-style: italic;
+}
+
+.details-empty {
+  margin: 0;
+}
+
+mat-progress-bar {
+  margin-bottom: 0.75rem;
+}

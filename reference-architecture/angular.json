@@ -149,7 +149,10 @@
                 "output": ""
               }
             ],
-            "styles": ["projects/plugin-host/src/styles.scss"]
+            "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "projects/plugin-host/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
