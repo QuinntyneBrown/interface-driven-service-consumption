@@ -106,21 +106,21 @@ npm run test:e2e
 
 ## Documentation
 
-The deep-dive docs live in `reference-architecture/docs/`:
+The full deep-dive lives in
+[`reference-architecture/docs/architecture.md`](reference-architecture/docs/architecture.md).
+It covers, in three sections:
 
-- [`architecture.md`](reference-architecture/docs/architecture.md) —
-  the four projects, dependency rules, and how the singleton store flows
-  through both hosts.
-- [`injection-token-pattern.md`](reference-architecture/docs/injection-token-pattern.md)
-  — interface + token + implementation split, **singleton semantics of
-  `providedIn: 'root'` + `useExisting` aliasing**, naming conventions,
-  the provider-form table, and a checklist for adding new services.
-- [`bridge-pattern.md`](reference-architecture/docs/bridge-pattern.md) —
-  the Playwright bridge in both directions (call recording AND
-  controller registry), `page.evaluate` mechanics and serialization
-  rules, the Page Object Model as both driver and verifier, and the
-  `NgZone.run` wrap that keeps OnPush views ticking when tests push
-  state from outside Angular's zone.
+1. **Architecture overview** — the four projects, dependency rules, and
+   how the singleton store flows through both hosts.
+2. **The interface injection-token pattern** — interface + token +
+   implementation split, singleton semantics of `providedIn: 'root'` +
+   `useExisting` aliasing, naming conventions, provider-form table, and
+   a checklist for adding new services.
+3. **The window bridge pattern** — the Playwright bridge in both
+   directions (call recording AND controller registry), `page.evaluate`
+   mechanics and serialization rules, the Page Object Model as both
+   driver and verifier, and the `NgZone.run` wrap that keeps OnPush
+   views ticking when tests push state from outside Angular's zone.
 
 ## Reading order for new contributors
 

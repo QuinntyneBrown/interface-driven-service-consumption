@@ -1,0 +1,145 @@
+@startuml class-diagram
+title Interface-Driven Service Consumption — Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+' ─── framework library: contracts and the real implementation ─────────
+package "framework (lib)" #E8F1FF {
+
+  class "DashboardWidget" as DW <<data>> {
+    +readonly id: string
+    +readonly title: string
+    +readonly value: number
+  }
+
+  interface "IDashboardStateStore" as IStore {
+    +widgets: Signal<readonly DashboardWidget[]>
+    +loading: Signal<boolean>
+    +selectedWidgetId: Signal<string | null>
+    --
+    +loadWidgets(): void
+    +selectWidget(id: string): void
+    +refreshWidget(id: string): void
+  }
+
+  class "DASHBOARD_STATE_STORE" as TOKEN <<InjectionToken>> {
+    + new InjectionToken<IDashboardStateStore>(...)
+  }
+
+  class "DashboardStateStore" as RealStore <<@Injectable\nprovidedIn: 'root'>> {
+    -_widgets: WritableSignal<...>
+    -_loading: WritableSignal<boolean>
+    -_selectedWidgetId: WritableSignal<...>
+    --
+    +loadWidgets(): void
+    +selectWidget(id: string): void
+    +refreshWidget(id: string): void
+  }
+}
+
+' ─── plugin library: only knows the token + the interface ────────────
+package "plugin (lib)" #E8FFE8 {
+  class "Dashboard" as Dashboard <<@Component>> {
+    -store: IDashboardStateStore
+    -selectedWidget: Signal<...>  // computed
+  }
+}
+
+' ─── plugin-host application: mock + bridge for tests ────────────────
+package "plugin-host (app)" #FFF1E8 {
+
+  interface "IDashboardStateController" as IController <<test-only>> {
+    +setWidgets(widgets): void
+    +setLoading(loading: boolean): void
+    +setSelectedWidgetId(id: string | null): void
+  }
+
+  class "DashboardStateStoreMock" as MockStore <<@Injectable\nprovidedIn: 'root'>> {
+    -zone: NgZone
+    -_widgets / _loading / _selectedWidgetId: WritableSignal<...>
+    --
+    +loadWidgets(): void
+    +selectWidget(id: string): void
+    +refreshWidget(id: string): void
+    +setWidgets(...): void
+    +setLoading(...): void
+    +setSelectedWidgetId(...): void
+  }
+
+  class "BridgeCall" as Call <<data>> {
+    +readonly method: string
+    +readonly args: readonly unknown[]
+    +readonly ts: number
+  }
+
+  interface "IPlaywrightBridge" as IBridge {
+    +calls: BridgeCall[]
+    --
+    +recordCall(method, args): void
+    +callsFor(method): BridgeCall[]
+    +reset(): void
+    +registerController<T>(name, controller): void
+    +controller<T>(name): T | undefined
+  }
+
+  class "window.__pluginHostBridge" as Bridge <<runtime singleton>> {
+  }
+}
+
+' ─── application composition roots ───────────────────────────────────
+package "app (production host)" #F1E8FF {
+  class "appConfig (app)" as AppConfig <<ApplicationConfig>> {
+    +providers:
+    +  { provide: DASHBOARD_STATE_STORE,
+    +    useExisting: DashboardStateStore }
+  }
+}
+
+package "plugin-host composition" #F1E8FF {
+  class "appConfig (plugin-host)" as PHConfig <<ApplicationConfig>> {
+    +providers:
+    +  DashboardStateStoreMock,
+    +  { provide: DASHBOARD_STATE_STORE,
+    +    useExisting: DashboardStateStoreMock }
+  }
+}
+
+' ─── relationships ───────────────────────────────────────────────────
+IStore   ..>  DW : returns
+TOKEN    ..>  IStore : <typed as>
+RealStore ..|>  IStore : implements
+MockStore ..|>  IStore : implements
+MockStore ..|>  IController : implements (test-only)
+
+Dashboard ..> TOKEN : inject(DASHBOARD_STATE_STORE)
+Dashboard ..> IStore : reads via token
+
+Bridge ..|> IBridge : implements
+Bridge "1" o-- "many" Call : holds calls[]
+Bridge ..> IController : holds in controllers map\n('dashboard')
+
+MockStore ..> Bridge : registerController('dashboard', this)\nrecordCall(method, args)
+
+AppConfig ..> RealStore : useExisting alias
+PHConfig ..> MockStore : useExisting alias\n+ providedIn:'root'
+
+note right of TOKEN
+  The plugin imports ONLY the token
+  and the interface — never any
+  concrete class. Composition root
+  decides which singleton lives
+  behind the token.
+end note
+
+note bottom of MockStore
+  One mock instance per app:
+  providedIn: 'root' caches it on
+  the root injector; useExisting
+  aliases the token to the cached
+  instance — no second copy.
+end note
+
+@enduml

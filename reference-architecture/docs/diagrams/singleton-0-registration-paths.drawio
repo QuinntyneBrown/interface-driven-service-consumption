@@ -1,0 +1,49 @@
+<mxfile host="app.diagrams.net" agent="reference-architecture">
+  <diagram name="Two ways to register a singleton" id="singleton-0">
+    <mxGraphModel dx="1007" dy="672" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="450" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1" value="Two ways to register — both land on the root injector and produce a singleton" vertex="1">
+          <mxGeometry height="30" width="820" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="approach_a_label" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;spacingLeft=4" value="Approach A — declare on the class" vertex="1">
+          <mxGeometry height="20" width="320" x="40" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="approach_a" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontFamily=Courier New;align=left;verticalAlign=middle;spacingLeft=8" value="@Injectable({ providedIn: &#39;root&#39; })&#xa;export class DashboardStateStore { … }" vertex="1">
+          <mxGeometry height="80" width="360" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="approach_b_label" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=11;fontStyle=1;spacingLeft=4" value="Approach B — list in the root ApplicationConfig" vertex="1">
+          <mxGeometry height="20" width="360" x="40" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="approach_b" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontFamily=Courier New;align=left;verticalAlign=middle;spacingLeft=8" value="// app.config.ts (passed to bootstrapApplication)&#xa;export const appConfig: ApplicationConfig = {&#xa;  providers: [&#xa;    { provide: DASHBOARD_STATE_STORE,&#xa;      useClass: DashboardStateStore },&#xa;  ],&#xa;};" vertex="1">
+          <mxGeometry height="120" width="360" x="40" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="injector" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=top;align=center;spacingTop=8" value="Root injector cache" vertex="1">
+          <mxGeometry height="220" width="320" x="540" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="instance" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;align=center;verticalAlign=middle" value="DashboardStateStore&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="240" x="580" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a" edge="1" parent="1" source="approach_a" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.4;strokeColor=#82b366" target="instance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a_lbl" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontStyle=2" value="registers with root" vertex="1">
+          <mxGeometry height="20" width="160" x="410" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b" edge="1" parent="1" source="approach_b" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.7;strokeColor=#82b366" target="instance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b_lbl" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=10;fontStyle=2" value="registers with root" vertex="1">
+          <mxGeometry height="20" width="160" x="410" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="caption" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=2" value="Either path tells Angular &quot;put this registration on the root injector.&quot; The root injector is created once during&#xa;bootstrapApplication and caches one instance per registered token. So both approaches → singleton." vertex="1">
+          <mxGeometry height="40" width="820" x="40" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="zvxBNGYV8sM7XEEsRoSe-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;ONE cached instance, one set of WritableSignals, lives until the page unloads&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="140" x="630" y="250" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
