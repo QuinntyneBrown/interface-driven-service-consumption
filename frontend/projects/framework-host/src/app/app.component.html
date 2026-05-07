@@ -1,0 +1,11 @@
+<main data-testid="framework-host">
+  <h1>framework-host</h1>
+  <p>
+    Headless host for Playwright-driven tests of the framework library. The
+    real <code>DashboardStateStore</code> is wired here; tests drive it
+    through <code>window.__frameworkHostBridge</code> and intercept HTTP at
+    the network layer.
+  </p>
+</main>
+
+<router-outlet />

@@ -1,0 +1,67 @@
+@startuml sequence-framework-to-plugin
+title Direction 2: framework → plugin (driven via bridge controller)
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+
+actor "Playwright\n(Node)"     as Test
+participant "DashboardPage\n(POM)"      as POM
+participant "page.evaluate\n(CDP bridge)" as Eval
+participant "window.__pluginHostBridge" as Bridge
+participant "DashboardStateStoreMock\n(implements IDashboardStateController)" as Mock
+participant "NgZone"            as Zone
+participant "WritableSignal\n(_widgets)" as Sig
+participant "Angular CD\n(OnPush)"      as CD
+participant "Dashboard view"            as View
+
+== drive ==
+Test -> POM : dashboard.setWidgets([\n  {id:'a', title:'Alpha', value:10},\n  {id:'b', title:'Beta',  value:20},\n])
+
+POM -> Eval : page.evaluate(\n  (next) => bridge\n    .controller('dashboard')\n    .setWidgets(next),\n  widgets)
+activate Eval
+note right of Eval
+  Args structured-cloned from Node
+  to browser. The arrow function is
+  shipped as source text and runs in
+  the page's JS context — it does
+  NOT close over Node-side variables.
+end note
+
+Eval -> Bridge : controller<IDashboardStateController>('dashboard')
+activate Bridge
+Bridge --> Eval : Mock instance\n(registered in mock's ctor)
+deactivate Bridge
+
+Eval -> Mock : setWidgets(next)
+deactivate Eval
+activate Mock
+
+== re-enter zone ==
+Mock -> Zone : run(() => …)
+activate Zone
+Zone -> Sig : _widgets.set(next)
+activate Sig
+Sig -->> CD : signal change\n(consumer marks view dirty)
+deactivate Sig
+deactivate Zone
+deactivate Mock
+
+== render ==
+CD -> CD : ApplicationRef.tick()\n(scheduled by NgZone)
+activate CD
+CD -> View : re-render @for / @if /\ncomputed selectedWidget()
+deactivate CD
+activate View
+View -->> Test : new DOM observable\nvia Playwright locators
+deactivate View
+
+== verify ==
+Test -> Test : await expect(\n  dashboard.widget('a'))\n  .toContainText('Alpha: 10')
+
+note over Mock, Zone
+  Without zone.run(...) the signal
+  value would update but the OnPush
+  view would not tick — the test
+  would see stale DOM.
+end note
+
+@enduml

@@ -1,0 +1,50 @@
+<mxfile host="app.diagrams.net" agent="reference-architecture" version="22.1.16">
+  <diagram name="Singleton — one instance per app" id="singleton-1">
+    <mxGraphModel dx="900" dy="500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="900" pageHeight="450" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" value="@Injectable({ providedIn: 'root' })  →  one instance per app" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="820" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Callers -->
+        <mxCell id="caller_a" value="Component A&#10;inject(DashboardStateStore)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="caller_b" value="Component B&#10;inject(DashboardStateStore)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="caller_c" value="Service C&#10;inject(DashboardStateStore)" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="40" y="270" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Root injector cache -->
+        <mxCell id="cache" value="Root injector cache" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=top;align=center;spacingTop=8" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="320" height="200" as="geometry" />
+        </mxCell>
+
+        <mxCell id="instance" value="DashboardStateStore&#10;(THE one cached instance)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;align=center;verticalAlign=middle" vertex="1" parent="1">
+          <mxGeometry x="540" y="180" width="240" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="e_a" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#82b366" edge="1" parent="1" source="caller_a" target="instance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#82b366" edge="1" parent="1" source="caller_b" target="instance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#82b366" edge="1" parent="1" source="caller_c" target="instance">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="caption" value="Angular constructs the class the FIRST time something injects it, then caches the instance.&#10;Every later inject(DashboardStateStore) — anywhere in the app — returns the SAME object." style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontStyle=2" vertex="1" parent="1">
+          <mxGeometry x="40" y="370" width="820" height="40" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

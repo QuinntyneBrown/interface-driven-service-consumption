@@ -1,0 +1,18 @@
+<mat-toolbar color="primary">
+  <mat-icon>dashboard</mat-icon>
+  <span style="margin-left: 0.5rem;">Reference Architecture</span>
+</mat-toolbar>
+
+<main style="padding: 1rem; max-width: 720px; margin: 0 auto;">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>App (real framework wiring)</mat-card-title>
+      <mat-card-subtitle>
+        DashboardStateStore is bound to DASHBOARD_STATE_STORE in app.config.ts
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content style="padding-top: 1rem;">
+      <lib-dashboard />
+    </mat-card-content>
+  </mat-card>
+</main>

@@ -16,7 +16,7 @@ real framework implementation.
 .
 ├── docs/
 │   └── idea.md                       # original brief
-└── reference-architecture/           # Angular workspace
+└── frontend/                       # Angular workspace
     └── projects/
         ├── framework/                # core lib: contracts + real implementations
         ├── plugin/                   # plugin lib: imports tokens only
@@ -85,7 +85,7 @@ The bridge ships **only** in `plugin-host`; it never reaches the production
 
 ## Running it
 
-All commands run from `reference-architecture/`:
+All commands run from `frontend/`:
 
 ```bash
 # install
@@ -107,7 +107,7 @@ npm run test:e2e
 ## Documentation
 
 The full deep-dive lives in
-[`reference-architecture/docs/architecture.md`](reference-architecture/docs/architecture.md).
+[`frontend/docs/architecture.md`](frontend/docs/architecture.md).
 It covers, in three sections:
 
 1. **Architecture overview** — the four projects, dependency rules, and
@@ -125,7 +125,7 @@ It covers, in three sections:
 ## Reading order for new contributors
 
 1. `docs/idea.md` — the original premise.
-2. [`reference-architecture/docs/architecture.md`](reference-architecture/docs/architecture.md) —
+2. [`frontend/docs/architecture.md`](frontend/docs/architecture.md) —
    how the pieces fit together.
 3. `projects/framework/src/lib/stores/dashboard-state.store.contract.ts` — the contract.
 4. `projects/plugin/src/lib/dashboard/dashboard.ts` — a consumer that knows only the token.

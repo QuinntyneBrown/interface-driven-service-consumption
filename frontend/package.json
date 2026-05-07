@@ -1,0 +1,50 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve app",
+    "start:app": "ng serve app",
+    "start:plugin-host": "ng serve plugin-host --port 4201",
+    "start:framework-host": "ng serve framework-host --port 4202",
+    "build": "npm run build:framework && npm run build:plugin && ng build app",
+    "build:framework": "ng build framework",
+    "build:plugin": "ng build plugin",
+    "build:plugin-host": "npm run build:framework && npm run build:plugin && ng build plugin-host",
+    "build:framework-host": "npm run build:framework && ng build framework-host",
+    "build:libs": "npm run build:framework && npm run build:plugin",
+    "watch:framework": "ng build framework --watch --configuration development",
+    "watch:plugin": "ng build plugin --watch --configuration development",
+    "watch": "ng build --watch --configuration development",
+    "test:e2e": "playwright test --config projects/plugin-host/e2e/playwright.config.ts",
+    "test:e2e:framework": "playwright test --config projects/framework-host/e2e/playwright.config.ts",
+    "test:e2e:install": "playwright install --with-deps chromium"
+  },
+  "private": true,
+  "packageManager": "npm@10.9.4",
+  "dependencies": {
+    "@angular/animations": "^17.3.0",
+    "@angular/cdk": "^17.3.0",
+    "@angular/common": "^17.3.0",
+    "@angular/compiler": "^17.3.0",
+    "@angular/core": "^17.3.0",
+    "@angular/forms": "^17.3.0",
+    "@angular/material": "^17.3.0",
+    "@angular/platform-browser": "^17.3.0",
+    "@angular/platform-browser-dynamic": "^17.3.0",
+    "@angular/router": "^17.3.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.3.0",
+    "@angular/cli": "^17.3.0",
+    "@angular/compiler-cli": "^17.3.0",
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.11.0",
+    "ng-packagr": "^17.3.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.4.5"
+  }
+}

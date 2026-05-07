@@ -1,0 +1,11 @@
+/* Global styles for the plugin-host (Playwright test wiring). */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
