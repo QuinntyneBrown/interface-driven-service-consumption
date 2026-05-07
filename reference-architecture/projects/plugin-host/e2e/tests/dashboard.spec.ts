@@ -57,8 +57,10 @@ test.describe('Dashboard plugin ← framework signals (via bridge controller)', 
       { id: 'b', title: 'Beta', value: 20 },
     ]);
 
-    await expect(dashboard.widget('a')).toContainText('Alpha: 10');
-    await expect(dashboard.widget('b')).toContainText('Beta: 20');
+    await expect(dashboard.widget('a')).toContainText('Alpha');
+    await expect(dashboard.widget('a')).toContainText('Value: 10');
+    await expect(dashboard.widget('b')).toContainText('Beta');
+    await expect(dashboard.widget('b')).toContainText('Value: 20');
     // Originally seeded widgets are gone — the signal replaced the list.
     await expect(dashboard.widget('w1')).toHaveCount(0);
   });
