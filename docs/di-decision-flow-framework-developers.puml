@@ -1,0 +1,23 @@
+@startuml di-decision-flow-framework-developers
+title Framework Developers - DI choice
+
+start
+if (Public extension point?) then (yes)
+  if (Multiple contributors?) then (yes)
+    :InjectionToken<T[]> (multi: true);
+  else (no)
+    :InjectionToken<T> + default factory\n(providedIn: 'root');
+  endif
+  stop
+endif
+if (Per-instance / stateful?) then (yes)
+  :Component providers;
+  stop
+endif
+if (Used app-wide?) then (yes)
+  :providedIn: 'root';
+else (no)
+  :providedIn: FeatureModule;
+endif
+stop
+@enduml

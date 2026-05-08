@@ -1,0 +1,23 @@
+@startuml di-decision-flow-plugin-developers
+title Plugin Developers - DI choice
+
+start
+if (Host exposes a token?) then (yes)
+  :Register against host token\n(multi: true if applicable);
+  stop
+endif
+if (Per-instance / stateful?) then (yes)
+  :Component providers;
+  stop
+endif
+if (Host already provides it?) then (yes)
+  :Inject - don't re-provide;
+  stop
+endif
+if (Consumers may override?) then (yes)
+  :Own InjectionToken + default factory;
+else (no)
+  :providedIn: 'root' or lazy module;
+endif
+stop
+@enduml
